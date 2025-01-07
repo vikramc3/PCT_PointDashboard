@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class = "navbar">
+        <ul>
+            <li><a href="/">Point Tracker</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/add_event">Add Event</a></li>
+            </li><a href="/login">Login</a></li>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == "admin" %}
+                    <li><a href="/admin" class="admin-button">Admin</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="navbar-logo">
+
+        {% if current_user.is_authenticated %}
+            <div class="navbar-user">
+                Welcome, {{ current_user.username }}!
+                <a href="/logout" class="logout-button">Logout</a>
+            </div>
+        {% else %}
+            <div class="navbar-user">
+                <a href="/login" class="login-button">Login</a>
+            </div>
+        {% endif %}
+    </nav>
+
+    <div class="form-container">
+        <h1>Login</h1>
+        <form method="POST" action="/login">
+            <label for="username">Username:</label>
+            <input type="text" name="username" placeholder="Enter your username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" name="password" placeholder="Enter your password" required>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <nav class = "navbar">
+        <ul>
+            <li><a href="/">Point Tracker</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/add_event">Add Event</a></li>
+            </li><a href="/login">Login</a></li>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == "admin" %}
+                    <li><a href="/admin" class="admin-button">Admin</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="navbar-logo">
+
+        {% if current_user.is_authenticated %}
+            <div class="navbar-user">
+                Welcome, {{ current_user.username }}!
+                <a href="/logout" class="logout-button">Logout</a>
+            </div>
+        {% else %}
+            <div class="navbar-user">
+                <a href="/login" class="login-button">Login</a>
+            </div>
+        {% endif %}
+    </nav>
+
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+
+        <section>
+            <h2>Edit History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in edit_history %}
+                    <tr>
+                        <td>{{ log.timestamp }}</td>
+                        <td>{{ log.user }}</td>
+                        <td>{{ log.action }}</td>
+                        <td>{{ log.details }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Add New Members</h2>
+            <form method="POST" action="/add_members">
+                <label for="members">Enter Member Names (comma-separated):</label>
+                <input type="text" id="members" name="members" required>
+                <button type="submit">Add Members</button>
+            </form>
+        </section>
+        
+
+        <section>
+            <h2>Reset Databases</h2>
+            <form method="POST" action="/reset_databases" onsubmit="return confirm('Are you sure you want to reset all databases? This action cannot be undone.')">
+                <button type="submit" class="danger-button">Reset Databases</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Add New User</h2>
+            <form method="POST" action="/add_user">
+                <label for="username">Username:</label>
+                <input type="text" name="username" placeholder="Enter username" required><br>
+        
+                <label for="password">Password:</label>
+                <input type="password" name="password" placeholder="Enter password" required><br>
+        
+                <label for="role">Role:</label>
+                <select name="role" required>
+                    <option value="viewer">Viewer</option>
+                    <option value="Leadership">Leadership</option>
+                    <option value="admin">Admin</option>
+                </select><br>
+        
+                <button type="submit">Add User</button>
+            </form>
+        </section>
+        
+        <section>
+            <h2>Current Usernames</h2>
+            <ul>
+                {% for user in users %}
+                <li>{{ user.username }} (Role: {{ user.role }})</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+    </div>
+</body>
+</html>

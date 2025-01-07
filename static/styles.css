@@ -1,0 +1,183 @@
+body {
+    margin: 0; 
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    position: relative;
+    background-color: rgb(0, 69, 162);
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+    height: 80px; 
+    padding: 0 20px;
+}
+
+.navbar ul{
+    list-style-type: none;
+    display: flex;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+}
+
+.navbar a{
+    color: white;
+    text-decoration: none;
+    height: 100%;
+    padding: 15px;
+    display: block;
+    text-align: center;
+}
+
+.navbar a:hover{
+    height: 100%;
+    background-color: rgb(0, 37, 95);
+
+}
+
+.navbar li{
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-logo {
+    height: 80px;
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    top: 50%; 
+    transform: translate(-50%, -50%); 
+}
+
+.form-container {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: #e6f3ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.form-container input,
+.form-container select,
+.form-container button {
+    width: 85%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-container button {
+    background-color: rgb(0, 69, 162);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: darkblue;
+}
+
+.form-container h1 {
+    text-align: center;
+}
+
+.chosen-container {
+    font-family: Arial, sans-serif;
+    margin-bottom: 20px;
+}
+
+.navbar-user {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: white;
+    font-weight: bold;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.navbar-user .login-button {
+    margin-left: 10px;
+    background-color: rgb(0, 37, 95);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.navbar-user .login-button:hover {
+    background-color: white;
+    color: white;
+}
+
+.navbar-user .logout-button {
+    margin-left: 10px;
+    background-color: darkred;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.navbar-user .logout-button:hover {
+    background-color: red;
+    color: white;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.action-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #0056b3;
+}
+
+.danger-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.danger-button:hover {
+    background-color: darkred;
+}

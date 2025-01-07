@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Points</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding-bottom: 50px;
+        }
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <nav class = "navbar">
+        <ul>
+            <li><a href="/">Point Tracker</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/add_event">Add Event</a></li>
+            </li><a href="/login">Login</a></li>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == "admin" %}
+                    <li><a href="/admin" class="admin-button">Admin</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="navbar-logo">
+
+        {% if current_user.is_authenticated %}
+            <div class="navbar-user">
+                Welcome, {{ current_user.username }}!
+                <a href="/logout" class="logout-button">Logout</a>
+            </div>
+        {% else %}
+            <div class="navbar-user">
+                <a href="/login" class="login-button">Login</a>
+            </div>
+        {% endif %}
+    </nav>
+    <h1 style="text-align: center;">Total Points</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Member Name</th>
+                <th>Brotherhood Points</th>
+                <th>Professionalism Points</th>
+                <th>Service Points</th>
+                <th>General Points</th>
+                <th>Total Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in total_points %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.member_name }}</td>
+                <td>{{ item.brotherhood_points }}</td>
+                <td>{{ item.professionalism_points }}</td>
+                <td>{{ item.service_points }}</td>
+                <td>{{ item.general_points }}</td>
+                <td>{{ item.total_points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
