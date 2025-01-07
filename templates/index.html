@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flask Points</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <h1>Points Tracker</h1>
+    <a href="/add_event">Add New Event</a>
+    <form action="/add" method="post">
+      <input type="text" name="user_name" placeholder="User Name" required />
+      <button type="submit">Add User</button>
+    </form>
+    <ul>
+      {% for point in points %}
+      <li>
+        {{ point.user_name }}: {{ point.points }} points
+        <form action="/update/{{ point.id }}" method="post">
+          <input
+            type="number"
+            name="points"
+            placeholder="Add Points"
+            required
+          />
+          <button type="submit">Update</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

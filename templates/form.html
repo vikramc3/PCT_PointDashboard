@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ "Edit Event" if event else "Add Event" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+</head>
+<body>
+    <nav class = "navbar">
+        <ul>
+            <li><a href="/">Point Tracker</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/add_event">Add Event</a></li>
+            </li><a href="/login">Login</a></li>
+            {% if current_user.is_authenticated %}
+                {% if current_user.role == "admin" %}
+                    <li><a href="/admin" class="admin-button">Admin</a></li>
+                {% endif %}
+            {% endif %}
+        </ul>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="navbar-logo">
+
+        {% if current_user.is_authenticated %}
+            <div class="navbar-user">
+                Welcome, {{ current_user.username }}!
+                <a href="/logout" class="logout-button">Logout</a>
+            </div>
+        {% else %}
+            <div class="navbar-user">
+                <a href="/login" class="login-button">Login</a>
+            </div>
+        {% endif %}
+    </nav>
+
+    <div class="form-container">
+        <h1>{{ "Edit Event" if event else "Add a New Event" }}</h1>
+        <form method="POST" onsubmit="return confirmSubmission()">
+            <label for="date_of_event">Date:</label>
+            <input type="date" name="date_of_event" value="{{ event.date if event else '' }}" required>
+    
+            <label for="name_of_event">Event Name:</label>
+            <input type="text" name="name_of_event" value="{{ event.event_name if event else '' }}" required>
+    
+            <label for="type_of_event">Type of Event:</label>
+            <select name="type_of_event" required>
+                <option value="Brotherhood" {% if event and event.event_type == 'Brotherhood' %}selected{% endif %}>Brotherhood</option>
+                <option value="Professionalism" {% if event and event.event_type == 'Professionalism' %}selected{% endif %}>Professionalism</option>
+                <option value="Service" {% if event and event.event_type == 'Service' %}selected{% endif %}>Service</option>
+                <option value="General" {% if event and event.event_type == 'General' %}selected{% endif %}>General</option>
+            </select>
+    
+            <label for="attendees">Attendees:</label>
+            <select name="attendees" multiple class="chosen-select">
+                {% for member in members %}
+                <option value="{{ member.member_name }}" {% if event and member.member_name in event.attendees.split(',') %}selected{% endif %}>
+                    {{ member.member_name }}
+                </option>
+                {% endfor %}
+            </select>
+    
+            <label for="points_for_attending">Points for Attending:</label>
+            <input type="number" name="points_for_attending" value="{{ event.points_for_attending if event else '' }}" required>
+    
+            <label for="points_for_not_attending">Points for Not Attending:</label>
+            <input type="number" name="points_for_not_attending" value="{{ event.points_for_not_attending if event else '' }}" required>
+    
+            {% if current_user.is_authenticated %}
+                <button type="submit">{{ "Save Changes" if event else "Submit" }}</button>
+            {% else %}
+                <button type="button" onclick="redirectToLogin()">Login to Submit</button>
+            {% endif %}
+        </form>
+    </div>
+
+    <script>
+        function confirmSubmission() {
+            alert("Event {{ 'updated' if event else 'added' }} successfully!");
+            return true;
+        }
+
+        function redirectToLogin() {
+            window.location.href = "/login";
+        }
+
+        $(document).ready(function() {
+            $(".chosen-select").chosen({
+                width: "100%",
+                placeholder_text_multiple: "Select attendees",
+                no_results_text: "No results found!"
+            });
+        });
+    </script>
+</body>
+</html>
