@@ -1,1 +1,14 @@
 migrations/
+MemberList.csv
+MemberList.numbers
+venv/
+.env
+*.log
+*.sqlite3
+db.sqlite3
+__pycache__/
+*.pyc
+*.pyo
+instance/
+old-app.py
+script.ipynb

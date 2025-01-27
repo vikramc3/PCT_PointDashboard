@@ -52,7 +52,6 @@
                 <option value="Service" {% if event and event.event_type == 'Service' %}selected{% endif %}>Service</option>
                 <option value="General" {% if event and event.event_type == 'General' %}selected{% endif %}>General</option>
             </select>
-    
             <label for="attendees">Attendees:</label>
             <select name="attendees" multiple class="chosen-select">
                 {% for member in members %}
@@ -66,7 +65,7 @@
             <input type="number" name="points_for_attending" value="{{ event.points_for_attending if event else '' }}" required>
     
             <label for="points_for_not_attending">Points for Not Attending:</label>
-            <input type="number" name="points_for_not_attending" value="{{ event.points_for_not_attending if event else '' }}" required>
+            <input type="number" name="points_for_not_attending" value="{{ event.points_for_not_attending if event else '' }}" required max="0" step="any" oninput="validateNegative(this)">
     
             {% if current_user.is_authenticated %}
                 <button type="submit">{{ "Save Changes" if event else "Submit" }}</button>
@@ -84,6 +83,13 @@
 
         function redirectToLogin() {
             window.location.href = "/login";
+        }
+        
+        function validateNegative(input) {
+            if (parseFloat(input.value) > 0) {
+                alert("Points for Not Attending must be 0 or a negative value.");
+                input.value = "";
+            }
         }
 
         $(document).ready(function() {
