@@ -8,18 +8,15 @@ import os
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
-db_username = os.getenv("DB_USERNAME")
-db_password = os.getenv("DB_PASSWORD")
-db_host = os.getenv("DB_HOST")
-db_port = os.getenv("DB_PORT", "5432")
-db_name = os.getenv("DB_NAME")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
+db_url = os.getenv("DB_URL")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_BINDS'] = {
-    'events': f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}",
-    'users': f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}",
-    'edithistory': f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}",
-    'total_points': f"postgresql://{db_username}:{db_password}@{db_host}:{db_port}/{db_name}"
+    'events': db_url,
+    'users': db_url,
+    'edithistory': db_url,
+    'total_points': db_url
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DEBUG'] = False
