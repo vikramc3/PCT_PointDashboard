@@ -10,6 +10,7 @@
     <nav class = "navbar">
         <ul>
             <li><a href="/">Point Tracker</a></li>
+            <li><a href="/pledge_hub">Pledge Hub</a></li>
             <li><a href="/events">Events</a></li>
             <li><a href="/add_event">Add Event</a></li>
             </li><a href="/login">Login</a></li>
@@ -66,6 +67,15 @@
                 <label for="members">Enter Member Names (comma-separated):</label>
                 <input type="text" id="members" name="members" required>
                 <button type="submit">Add Members</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Add New Pledges</h2>
+            <form action="/add_pledges" method="POST">
+                <label for="pledges">Enter pledge names (comma-separated):</label>
+                <input type="text" name="pledges" required>
+                <button type="submit">Add Pledges</button>
             </form>
         </section>
         

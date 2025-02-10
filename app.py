@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 import os
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY")
+app.secret_key = "0310f97c1b8388b9891335b1d0f28a88beb17df9fb3d8b87" #os.getenv("FLASK_SECRET_KEY")
 
 db_url = os.getenv("DB_URL")
 
@@ -36,6 +36,7 @@ class TotalPoint(db.Model):
     service_points = db.Column(db.Float, default = 0)
     general_points = db.Column(db.Float, default = 0)
     total_points = db.Column(db.Float, default = 0)
+    is_pledge = db.Column(db.Boolean, default=False)
     def calculate_total(self):
         self.total_points = (self.brotherhood_points + self.service_points + self.professionalism_points + self.general_points)
     
@@ -78,7 +79,7 @@ def load_user(user_id):
 
 @app.route('/')
 def show_total_points():
-    total_points = TotalPoint.query.order_by(TotalPoint.member_name.asc()).all()
+    total_points = TotalPoint.query.filter_by(is_pledge=False).order_by(TotalPoint.member_name.asc()).all()
     return render_template('total_points.html', total_points=total_points)
 
 @app.route('/events')
@@ -375,4 +376,34 @@ def reset_points_and_events():
     db.session.commit()
 
     flash("All points have been reset to 0, and events and history have been cleared.", "success")
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/pledge_hub')
+def pledge_hub():
+    pledges = TotalPoint.query.filter_by(is_pledge=True).order_by(TotalPoint.member_name.asc()).all()
+    return render_template('pledge_hub.html', total_points=pledges)
+
+@app.route('/add_pledges', methods=['POST'])
+@login_required
+def add_pledges():
+    if current_user.role != "admin":
+        return redirect(url_for('index'))
+
+    pledge_names = request.form['pledges']
+    pledge_list = [name.strip() for name in pledge_names.split(',')]
+
+    added_pledges = []
+    for pledge_name in pledge_list:
+        if pledge_name:
+            new_pledge = TotalPoint(member_name=pledge_name, is_pledge=True)
+            db.session.add(new_pledge)
+            added_pledges.append(pledge_name)
+
+    log = EditHistory(
+        user=current_user.username,
+        action="Added Pledges",
+        details=f"Added pledges: {', '.join(added_pledges)}"
+    )
+    db.session.add(log)
+    db.session.commit()
     return redirect(url_for('admin_dashboard'))
