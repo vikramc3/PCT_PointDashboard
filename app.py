@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 import os
 
 app = Flask(__name__)
-app.secret_key = "0310f97c1b8388b9891335b1d0f28a88beb17df9fb3d8b87" #os.getenv("FLASK_SECRET_KEY")
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 db_url = os.getenv("DB_URL")
 
