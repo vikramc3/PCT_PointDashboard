@@ -84,7 +84,7 @@ def show_total_points():
 
 @app.route('/events')
 def show_events():
-    events_all = events.query.all()
+    events_all = events.query.order_by(events.date.desc()).all()
     return render_template('events.html', event=events_all)
 
 @app.route('/edit_event/<int:event_id>', methods=['GET', 'POST'])
