@@ -61,6 +61,8 @@
                 </option>
                 {% endfor %}
             </select>
+            <button class="chosen-toggle select">Select all</button>
+            <button class="chosen-toggle deselect">Deselect all</button>
     
             <label for="points_for_attending">Points for Attending:</label>
             <input type="number" name="points_for_attending" value="{{ event.points_for_attending if event else '' }}" required step="0.25">
@@ -98,6 +100,16 @@
                 width: "100%",
                 placeholder_text_multiple: "Select attendees",
                 no_results_text: "No results found!"
+            });
+            $('.chosen-toggle.select').on('click', function() {
+                $('.chosen-select option').prop('selected', true);
+                $('.chosen-select').trigger('chosen:updated');
+            });
+
+            // Deselect all
+            $('.chosen-toggle.deselect').on('click', function() {
+                $('.chosen-select option').prop('selected', false);
+                $('.chosen-select').trigger('chosen:updated');
             });
         });
     </script>
