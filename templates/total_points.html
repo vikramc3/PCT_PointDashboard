@@ -74,7 +74,11 @@
         <tbody>
             {% for item in total_points %}
             <tr>
-                <td>{{ item.member_name }}</td>
+                <td>
+                    <a href="{{ url_for('member_detail', member_name=item.member_name) }}">
+                      {{ item.member_name }}
+                    </a>
+                </td>
                 <td>{{ item.brotherhood_points }}</td>
                 <td>{{ item.professionalism_points }}</td>
                 <td>{{ item.service_points }}</td>
@@ -84,5 +88,10 @@
             {% endfor %}
         </tbody>
     </table>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('download_total_points') }}" class="btn btn-primary" style="padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px;">
+            Download CSV
+        </a>
+    </div>
 </body>
 </html>

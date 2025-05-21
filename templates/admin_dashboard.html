@@ -110,6 +110,17 @@
         
                 <button type="submit">Add User</button>
             </form>
+            <h2>Admin Tools</h2>
+
+            <form method="POST" action="/promote_pledges" style="margin-bottom: 20px;">
+                <button type="submit" class="btn btn-primary">Promote All Pledges</button>
+            </form>
+
+            <form action="/remove_members" method="POST">
+                <label for="members">Remove Members (comma-separated):</label><br>
+                <input type="text" id="members" name="members" placeholder="Enter names here..." style="width: 300px;">
+                <button type="submit" class="btn btn-danger">Remove Members</button>
+            </form>
         </section>
         
         <section>

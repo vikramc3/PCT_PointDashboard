@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ member.member_name }} – Events Attended</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding-bottom: 50px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            margin-top: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        a.back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="/">Point Tracker</a></li>
+            <li><a href="/pledge_hub">Pledge Hub</a></li>
+            <li><a href="/events">Events</a></li>
+            <li><a href="/add_event">Add Event</a></li>
+            <li><a href="/login">Login</a></li>
+            {% if current_user.is_authenticated and current_user.role == "admin" %}
+                <li><a href="/admin" class="admin-button">Admin</a></li>
+            {% endif %}
+        </ul>
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="navbar-logo">
+        {% if current_user.is_authenticated %}
+            <div class="navbar-user">
+                Welcome, {{ current_user.username }}!
+                <a href="/logout" class="logout-button">Logout</a>
+            </div>
+        {% endif %}
+    </nav>
+
+    <div class="container">
+        <h2 style="text-align: center;">{{ member.member_name }} – Events Attended</h2>
+
+        {% if events %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.event_name }}</td>
+                    <td>{{ event.date.strftime('%Y-%m-%d') if event.date else 'N/A' }}</td>
+                    <td>{{ event.points_for_attending }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align: center;">This member has not attended any events yet.</p>
+        {% endif %}
+
+        <div style="text-align: center;">
+            <a href="/" class="back-link">← Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

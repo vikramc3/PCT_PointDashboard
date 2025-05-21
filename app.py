@@ -4,6 +4,9 @@ from flask_migrate import Migrate
 from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
 from flask_bcrypt import Bcrypt
+from flask import Response
+import csv
+import io
 import os
 
 app = Flask(__name__)
@@ -407,3 +410,73 @@ def add_pledges():
     db.session.add(log)
     db.session.commit()
     return redirect(url_for('admin_dashboard'))
+
+@app.route('/download_total_points')
+def download_total_points():
+    total_points = TotalPoint.query.filter_by(is_pledge=False).order_by(TotalPoint.member_name.asc()).all()
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow(["Member Name", "Brotherhood Points", "Professionalism Points", "Service Points", "General Points", "Total Points"])
+
+    for item in total_points:
+        writer.writerow([
+            item.member_name,
+            item.brotherhood_points,
+            item.professionalism_points,
+            item.service_points,
+            item.general_points,
+            item.total_points
+        ])
+
+    response = Response(output.getvalue(), mimetype='text/csv')
+    response.headers['Content-Disposition'] = 'attachment; filename=total_points.csv'
+    return response
+
+@app.route('/promote_pledges', methods=['POST'])
+def promote_pledges():
+    pledges = TotalPoint.query.filter_by(is_pledge=True).all()
+    for pledge in pledges:
+        pledge.is_pledge = False
+    db.session.commit()
+    flash("All pledges have been categorized as Active!")
+    return redirect(url_for('admin'))
+
+@app.route('/remove_members', methods=['POST'])
+@login_required
+def remove_members():
+    if current_user.role != "admin":
+        return redirect(url_for('index'))
+
+    member_names = request.form['members']
+    member_list = [name.strip() for name in member_names.split(',')]
+
+    deleted_names = []
+
+    for name in member_list:
+        result = TotalPoint.query.filter_by(member_name=name).delete()
+        if result > 0:
+            deleted_names.append(name)
+
+    db.session.commit()
+    flash(f"Removed {len(deleted_names)} member(s).")
+
+    log = EditHistory(
+        user=current_user.username,
+        action="Removed Members",
+        details=f"Removed members: {', '.join(deleted_names)}"
+    )
+    db.session.add(log)
+    db.session.commit()
+
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/member/<member_name>')
+@login_required
+def member_detail(member_name):
+    member = TotalPoint.query.filter_by(member_name=member_name).first()
+
+    attended_events = events.query.filter(events.attendees.like(f"%{member_name}%")).all()
+
+    return render_template('member_detail.html', member=member, events=attended_events)
